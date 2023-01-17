@@ -15,9 +15,13 @@ namespace CarDealership.WebAPI.Controllers
 
         public static DataHolder dataHolder = new DataHolder();
         // GET: api/Car
-        public IEnumerable<Car> Get()
+        public HttpResponseMessage Get()
         {
-            return dataHolder.GetCars();
+            List<Car> cars = dataHolder.GetCars();
+            if(dataHolder.GetCars().Any())
+            return Request.CreateResponse(HttpStatusCode.OK, cars);
+
+            return Request.CreateResponse(HttpStatusCode.NotFound, "There are no cars saved");
         }
 
         // GET: api/Car/5
@@ -26,7 +30,8 @@ namespace CarDealership.WebAPI.Controllers
             Car car = dataHolder.GetCar(id);
             if(car!=null)
             return Request.CreateResponse(HttpStatusCode.OK, car);
-            return Request.CreateResponse(HttpStatusCode.NoContent, "No element with id " + id);
+
+            return Request.CreateResponse(HttpStatusCode.NotFound, "There is no element with id "+id);
             
         }
 
@@ -50,28 +55,49 @@ namespace CarDealership.WebAPI.Controllers
         }
 
         
-        public void Put(int id, [FromBody]int newKilometers)
+        public HttpResponseMessage Put(int id, [FromBody]int newKilometers)
         {
-            dataHolder.UpdateCarsKilometersTraveled(id, newKilometers);
+            if (dataHolder.UpdateCarsKilometersTraveled(id, newKilometers)) return Request.CreateResponse(HttpStatusCode.OK, 
+                "successfully changed kilometers on car with id "+id);
+
+            return Request.CreateResponse(HttpStatusCode.NotFound, "There is no car with id " + id);
+            
         }
 
         
-        public void Put(Car car, int newKilometers)
+        public HttpResponseMessage Put(Car car, int newKilometers)
         {
-            dataHolder.UpdateCarsKilometersTraveled(car, newKilometers);
+            if (dataHolder.UpdateCarsKilometersTraveled(car, newKilometers)) return Request.CreateResponse(HttpStatusCode.OK,
+                "successfully changed kilometers on car");
+
+            return Request.CreateResponse(HttpStatusCode.NotFound, "there is no sent car in the list");
         }
 
 
         // DELETE: api/Car/5
-        public bool Delete(int id)
+        public HttpResponseMessage Delete(int id)
         {
-           return dataHolder.RemoveCarFromList(id);
+            if(dataHolder.RemoveCarFromList(id)) return Request.CreateResponse(HttpStatusCode.OK,"Car with id "+id+" is sucessfuly deleted");
+
+            return Request.CreateResponse(HttpStatusCode.BadRequest,"There is no element with id "+id);
         }
 
         // DELETE: api/Car/
-        public bool Delete([FromBody]Car car)
+        public HttpResponseMessage Delete([FromBody]Car car)
         {
-           return dataHolder.RemoveCarFromList(car);
+            bool completed = dataHolder.RemoveCarFromList(new Car()
+            {
+                Color = car.Color,
+                Horsepower = car.Horsepower,
+                Id = car.Id,
+                KilometersTravelled= car.KilometersTravelled,
+                ManufacturerName = car.ManufacturerName,
+                Model = car.Model,
+                TopSpeed = car.TopSpeed,
+                Year = car.Year
+            });
+            if (completed) return Request.CreateResponse(HttpStatusCode.OK, "Car is deleted");
+            return Request.CreateResponse(HttpStatusCode.BadRequest, "Element could not be found");
         }
     }
 

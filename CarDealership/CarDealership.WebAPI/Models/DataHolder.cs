@@ -20,13 +20,26 @@ namespace CarDealership.WebAPI.Models
             return cars;
         }
         public Car GetCar(int id) { return cars.Find(x => x.Id == id); }
-        public void UpdateCarsKilometersTraveled(int id, int newKilometers)
+        public bool UpdateCarsKilometersTraveled(int id, int newKilometers)
         {
-            cars.Find(x => x.Id == id).KilometersTravelled = newKilometers;
+            Car selectedCar = cars.Find(x => x.Id == id);
+            if (selectedCar!= null)
+            {
+                selectedCar.KilometersTravelled=newKilometers;
+                return true;
+            }
+            return false;
+            
         }
-        public void UpdateCarsKilometersTraveled(Car car, int newKilometers)
+        public bool UpdateCarsKilometersTraveled(Car car, int newKilometers)
         {
-            cars.Find(x => x == car).KilometersTravelled = newKilometers;
+            Car selectedCar = cars.Find(x => x.Id == car.Id && x.KilometersTravelled==car.KilometersTravelled);
+            if (selectedCar != null)
+            {
+                selectedCar.KilometersTravelled = newKilometers;
+                return true;
+            }
+            return false;
         }
         public bool RemoveCarFromList(int id)
         {
@@ -34,7 +47,8 @@ namespace CarDealership.WebAPI.Models
         }
         public bool RemoveCarFromList(Car car)
         {
-            return cars.Remove(car);
+           
+            return cars.Remove(cars.Find(x => x.Id == car.Id));
         }
     }
 }
