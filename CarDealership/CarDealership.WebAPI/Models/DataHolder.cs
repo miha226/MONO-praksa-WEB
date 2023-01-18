@@ -19,29 +19,20 @@ namespace CarDealership.WebAPI.Models
         {
             return cars;
         }
-        public Car GetCar(int id) { return cars.Find(x => x.Id == id); }
-        public bool UpdateCarsKilometersTraveled(int id, int newKilometers)
+        public Car GetCar(Guid id) { return cars.Find(x => x.Id == id); }
+        
+        public bool UpdateCarsKilometersTraveled(Car car)
         {
-            Car selectedCar = cars.Find(x => x.Id == id);
-            if (selectedCar!= null)
+            int selectedCar = cars.FindIndex(x => x.Id == car.Id);
+            if (selectedCar != -1)
             {
-                selectedCar.KilometersTravelled=newKilometers;
-                return true;
-            }
-            return false;
-            
-        }
-        public bool UpdateCarsKilometersTraveled(Car car, int newKilometers)
-        {
-            Car selectedCar = cars.Find(x => x.Id == car.Id && x.KilometersTravelled==car.KilometersTravelled);
-            if (selectedCar != null)
-            {
-                selectedCar.KilometersTravelled = newKilometers;
+                cars[selectedCar]= car;
                 return true;
             }
             return false;
         }
-        public bool RemoveCarFromList(int id)
+
+        public bool RemoveCarFromList(Guid id)
         {
             return cars.Remove(cars.Find(car => car.Id == id));
         }

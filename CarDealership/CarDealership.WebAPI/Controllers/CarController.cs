@@ -18,78 +18,87 @@ namespace CarDealership.WebAPI.Controllers
         // GET: api/Car
         public HttpResponseMessage Get()
         {
-            List<Car> cars = new List<Car>();
-            SqlConnection connection = new SqlConnection(@"Data Source=st-02\SQLEXPRESS;Initial Catalog=CarDealership;Integrated Security=True");
-            SqlCommand command = new SqlCommand("Select * from Car", connection);
-            connection.Open();
+            //List<Car> cars = new List<Car>();
+            //SqlConnection connection = new SqlConnection(@"Data Source=st-02\SQLEXPRESS;Initial Catalog=CarDealership;Integrated Security=True");
+            //SqlCommand command = new SqlCommand("Select * from Car", connection);
+            //connection.Open();
 
-            SqlDataReader reader = command.ExecuteReader();
+            //SqlDataReader reader = command.ExecuteReader();
 
-            while (reader.Read())
+            //while (reader.Read())
+            //{
+            //    return Request.CreateResponse(HttpStatusCode.OK, reader["Color"]);
+            //}
+
+            List<Car> cars = dataHolder.GetCars();
+            if (cars.Any())
             {
-                return Request.CreateResponse(HttpStatusCode.OK, reader["Color"]);
+                return Request.CreateResponse(HttpStatusCode.OK, cars);
             }
-
             
-            if(dataHolder.GetCars().Any())
-            return Request.CreateResponse(HttpStatusCode.OK, cars);
+            
 
             return Request.CreateResponse(HttpStatusCode.NotFound, "There are no cars saved");
         }
 
         // GET: api/Car/5
-        public HttpResponseMessage Get(int id)
+        public HttpResponseMessage Get(Guid id)
         {
             Car car = dataHolder.GetCar(id);
-            if(car!=null)
-            return Request.CreateResponse(HttpStatusCode.OK, car);
+            if (car != null)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, car);
+            }
+            
 
             return Request.CreateResponse(HttpStatusCode.NotFound, "There is no element with id "+id);
             
         }
 
         // POST: api/Car
-        public IHttpActionResult Post(Car car)
+        public HttpResponseMessage Post(Car car)
         {
             if (!ModelState.IsValid)
-                return BadRequest("Invalid data.");
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "The object is incorrectly defined");
+            }
+                
 
             dataHolder.AddCar(new Car() { 
                 ManufacturerName=car.ManufacturerName,
                 Model=car.Model,
                 Year=car.Year,
                 Color=car.Color,
-                Id=car.Id,
+                Id=Guid.NewGuid(),
                 KilometersTravelled=car.KilometersTravelled,
                 TopSpeed=car.TopSpeed});
 
-            return Ok();
+            return Request.CreateResponse(HttpStatusCode.Created, "Object is added in databse");
         }
 
         
-        public HttpResponseMessage Put(int id, [FromBody]int newKilometers)
-        {
-            if (dataHolder.UpdateCarsKilometersTraveled(id, newKilometers)) return Request.CreateResponse(HttpStatusCode.OK, 
-                "successfully changed kilometers on car with id "+id);
-
-            return Request.CreateResponse(HttpStatusCode.NotFound, "There is no car with id " + id);
-            
-        }
+        
 
         
-        public HttpResponseMessage Put(Car car, int newKilometers)
+        public HttpResponseMessage Put(Car car)
         {
-            if (dataHolder.UpdateCarsKilometersTraveled(car, newKilometers)) return Request.CreateResponse(HttpStatusCode.OK,
-                "successfully changed kilometers on car");
+            if (dataHolder.UpdateCarsKilometersTraveled(car))
+            {
+                return Request.CreateResponse(HttpStatusCode.OK,
+                "successfully changed car");
+            }
 
             return Request.CreateResponse(HttpStatusCode.NotFound, "there is no sent car in the list");
         }
 
 
         // DELETE: api/Car/5
-        public HttpResponseMessage Delete(int id)
+        public HttpResponseMessage Delete(Guid id)
         {
-            if(dataHolder.RemoveCarFromList(id)) return Request.CreateResponse(HttpStatusCode.OK,"Car with id "+id+" is sucessfuly deleted");
+            if (dataHolder.RemoveCarFromList(id))
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, "Car with id " + id + " is sucessfuly deleted");
+            }
 
             return Request.CreateResponse(HttpStatusCode.BadRequest,"There is no element with id "+id);
         }
@@ -99,15 +108,11 @@ namespace CarDealership.WebAPI.Controllers
         {
             bool completed = dataHolder.RemoveCarFromList(new Car()
             {
-                Color = car.Color,
-                Id = car.Id,
-                KilometersTravelled= car.KilometersTravelled,
-                ManufacturerName = car.ManufacturerName,
-                Model = car.Model,
-                TopSpeed = car.TopSpeed,
-                Year = car.Year
+                Id = car.Id
             });
-            if (completed) return Request.CreateResponse(HttpStatusCode.OK, "Car is deleted");
+            if (completed) {
+                return Request.CreateResponse(HttpStatusCode.OK, "Car is deleted");
+            } 
             return Request.CreateResponse(HttpStatusCode.BadRequest, "Element could not be found");
         }
     }
