@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-
+using System.Data.SqlClient;
 namespace CarDealership.WebAPI.Controllers
 {
     
@@ -14,10 +14,23 @@ namespace CarDealership.WebAPI.Controllers
 
 
         public static DataHolder dataHolder = new DataHolder();
+        
         // GET: api/Car
         public HttpResponseMessage Get()
         {
-            List<Car> cars = dataHolder.GetCars();
+            List<Car> cars = new List<Car>();
+            SqlConnection connection = new SqlConnection(@"Data Source=st-02\SQLEXPRESS;Initial Catalog=CarDealership;Integrated Security=True");
+            SqlCommand command = new SqlCommand("Select * from Car", connection);
+            connection.Open();
+
+            SqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, reader["Color"]);
+            }
+
+            
             if(dataHolder.GetCars().Any())
             return Request.CreateResponse(HttpStatusCode.OK, cars);
 
@@ -46,7 +59,6 @@ namespace CarDealership.WebAPI.Controllers
                 Model=car.Model,
                 Year=car.Year,
                 Color=car.Color,
-                Horsepower=car.Horsepower,
                 Id=car.Id,
                 KilometersTravelled=car.KilometersTravelled,
                 TopSpeed=car.TopSpeed});
@@ -88,7 +100,6 @@ namespace CarDealership.WebAPI.Controllers
             bool completed = dataHolder.RemoveCarFromList(new Car()
             {
                 Color = car.Color,
-                Horsepower = car.Horsepower,
                 Id = car.Id,
                 KilometersTravelled= car.KilometersTravelled,
                 ManufacturerName = car.ManufacturerName,
