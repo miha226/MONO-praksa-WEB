@@ -1,5 +1,5 @@
 CREATE TABLE Adress(
-AdressId int PRIMARY KEY,
+AdressId uniqueidentifier PRIMARY KEY default newID(),
 PostNumber int,
 City varchar(15),
 Street varchar (40)
@@ -7,55 +7,72 @@ Street varchar (40)
 
 
 CREATE TABLE Shop(
-ShopId int  PRIMARY KEY,
-Adress int FOREIGN KEY REFERENCES Adress(AdressId)
+ShopId uniqueidentifier PRIMARY KEY default newID(),
+ShopName varchar(30) not null,
+Adress uniqueidentifier FOREIGN KEY REFERENCES Adress(AdressId) UNIQUE
 )
 
+select * from Shop left join Adress on Shop.Adress=Adress.AdressId
+ full outer join Car on Shop.ShopId=Car.StoredInShop  where ShopId='F3905678-3478-4262-9048-3845CDC998B6'
+
+select * from Adress
+Insert into Shop (ShopName ,Adress) values ('test2','81BB34FC-A2C4-4FD6-A0BB-684D051927C8');
+
+
 CREATE TABLE Person(
-PersonId int PRIMARY KEY,
+PersonId uniqueidentifier PRIMARY KEY default newID(),
 FirstName varchar(15),
 LastName varchar(15)
 )
 
 CREATE TABLE Employee(
-Person int FOREIGN KEY REFERENCES Person(PersonId),
-Shop int FOREIGN KEY REFERENCES Shop(ShopId),
+Person uniqueidentifier FOREIGN KEY REFERENCES Person(PersonId),
+Shop uniqueidentifier FOREIGN KEY REFERENCES Shop(ShopId),
 Position varchar(30)
 );
 
-CREATE TABLE CarModel(
-CarModelId int PRIMARY KEY,
-ManufacturerName varchar(20),
-Model varchar(20) UNIQUE,
+
+
+
+
+CREATE TABLE Car(
+CarId uniqueidentifier PRIMARY KEY default newID(),
+StoredInShop uniqueidentifier FOREIGN KEY REFERENCES Shop(ShopId),
+YearOfManufacture int not null,
+KilometersTraveled int not null,
+Color varchar(20) not null,
+ManufacturerName varchar(20) not null,
+Model varchar(20) not null,
 TopSpeed int not null
 );
 
 
-CREATE TABLE Car(
-CarId int PRIMARY KEY,
-Model int FOREIGN KEY REFERENCES CarModel(CarModelId),
-StoredInShop int FOREIGN KEY REFERENCES Shop(ShopId),
-DateOfManufacture int not null,
-KilometersTraveled int not null,
-Color varchar(20) not null
-);
+
+Insert into Car (ManufacturerName,Model,YearOfManufacture,KilometersTraveled,TopSpeed,Color,StoredInShop) 
+values ( 'Audi','A6',2012, 100000, 220, 'White', '283409BF-BB9B-4DE8-9284-198BA2923A3A')
+select * from Car
+delete from Car where CarId='D3468011-68CF-4AA4-BB79-1C76DDAE8BC7'
+
+drop table Car
+drop table Employee
+drop table Shop
+drop table Adress
+drop table Person
+
+
+Insert into Adress (PostNumber, City, Street ) Values ( 22345, 'Osijek', 'Zagrebacka 3');
+Insert into Adress (PostNumber, City, Street ) Values ( 14345, 'Zagreb', 'Dubrovacka 1b');
+Insert into Adress (PostNumber, City, Street ) Values ( 34545, 'Split', 'Kralja Zvonimira 4');
+
+Insert into Person ( FirstName, LastName) values ( 'Filip', 'Kovac');
+Insert into Person ( FirstName, LastName) values ( 'Martina', 'Maric');
+Insert into Person ( FirstName, LastName) values ( 'Ivan', 'Ivic');
+Insert into Person ( FirstName, LastName) values ( 'Luka', 'Lukic');
+Insert into Person ( FirstName, LastName) values ( 'Sara', 'Saric');
+select * from Shop
 
 
 
-
-Insert into Adress (AdressId,PostNumber, City, Street ) Values (1, 22345, 'Osijek', 'Zagrebacka 3');
-Insert into Adress (AdressId,PostNumber, City, Street ) Values (2, 14345, 'Zagreb', 'Dubrovacka 1b');
-Insert into Adress (AdressId,PostNumber, City, Street ) Values (4, 34545, 'Split', 'Kralja Zvonimira 4');
-
-Insert into Person (PersonId, FirstName, LastName) values (2341, 'Filip', 'Kovac');
-Insert into Person (PersonId, FirstName, LastName) values (5612, 'Martina', 'Maric');
-Insert into Person (PersonId, FirstName, LastName) values (7623, 'Ivan', 'Ivic');
-Insert into Person (PersonId, FirstName, LastName) values (9783, 'Luka', 'Lukic');
-Insert into Person (PersonId, FirstName, LastName) values (5723, 'Sara', 'Saric');
-
-Insert into Shop (ShopId, Adress) values (2234,1);
-Insert into Shop (ShopId, Adress) values (1432,2);
-Insert into Shop (ShopId, Adress) values (3654,4);
 
 Insert into Employee (Person,Shop,Position) values (2341, 2234, 'manager');
 Insert into Employee (Person,Shop,Position) values (5612, 2234, 'salesperson');
@@ -65,27 +82,26 @@ Insert into Employee (Person,Shop,Position) values (7623, 3654, 'marketing');
 Insert into Employee (Person,Shop,Position) values (9783, 1432, 'manager');
 Insert into Employee (Person,Shop,Position) values (5723, 3654, 'manager');
 
-Insert into CarModel (CarModelId, ManufacturerName, Model, TopSpeed) values (23456, 'Audi', 'A1', 200);
-Insert into CarModel (CarModelId, ManufacturerName, Model, TopSpeed) values (23457, 'Audi', 'A3', 220);
-Insert into CarModel (CarModelId, ManufacturerName, Model, TopSpeed) values (23458, 'Audi', 'A4', 220);
-Insert into CarModel (CarModelId, ManufacturerName, Model, TopSpeed) values (23459, 'Audi', 'A6', 250);
-
-Insert into CarModel (CarModelId, ManufacturerName, Model, TopSpeed) values (33421, 'BMW', '120d', 220);
-Insert into CarModel (CarModelId, ManufacturerName, Model, TopSpeed) values (33522, 'BMW', '220d', 250);
-Insert into CarModel (CarModelId, ManufacturerName, Model, TopSpeed) values (33620, 'BMW', '300d', 280);
-
-Insert into CarModel (CarModelId, ManufacturerName, Model, TopSpeed) values (11421, 'VW', 'Golf', 220);
-Insert into CarModel (CarModelId, ManufacturerName, Model, TopSpeed) values (12421, 'VW', 'Passat', 250);
-
-Insert into Car (CarId,Model,StoredInShop,DateOfManufacture,KilometersTraveled,Color) values (1, 11421, 2234, 2015, 190000, 'White'); 
-Insert into Car (CarId,Model,StoredInShop,DateOfManufacture,KilometersTraveled,Color) values (2, 33522, 2234, 2014, 140000, 'Grey');
-Insert into Car (CarId,Model,StoredInShop,DateOfManufacture,KilometersTraveled,Color) values (4, 23457, 1432, 2011, 110000, 'Grey');
-Insert into Car (CarId,Model,StoredInShop,DateOfManufacture,KilometersTraveled,Color) values (8, 23456, 1432, 2019, 90000, 'Black');
-Insert into Car (CarId,Model,StoredInShop,DateOfManufacture,KilometersTraveled,Color) values (12, 33620, 3654, 2022, 20000, 'White');
-Insert into Car (CarId,Model,StoredInShop,DateOfManufacture,KilometersTraveled,Color) values (14, 33620, 3654, 2021, 120000, 'Black');
 
 
-Select * from Car where Model=33620;
+
+
+
+
+select * from CarModel
+Insert into Car (Model,StoredInShop,YearOfManufacture,KilometersTraveled,Color) 
+values ( (Select CarModelId from CarModel where Model='A6'),
+'283409BF-BB9B-4DE8-9284-198BA2923A3A', 2012, 220000, 'Grey'); 
+select * from car
+
+Select CarId,CarModel.ManufacturerName, CarModel.Model,Car.StoredInShop, CarModel.TopSpeed, Car.YearOfManufacture, KilometersTraveled,
+Color from Car left join CarModel on Car.Model = CarModel.CarModelId
+
+Select CarId,CarModel.ManufacturerName,Car.StoredInShop, CarModel.Model, CarModel.TopSpeed, 
+Car.YearOfManufacture, KilometersTraveled, Color from Car left join CarModel on Car.Model = CarModel.CarModelId
+delete from Car where CarId='9AFDF525-55B2-4CA7-9D48-B1F7D2FFEC5E'
+
+Select * from Car left join CarModel on Car.Model = CarModel.CarModelId
 
 Select * from CarModel order by ManufacturerName DESC;
 
@@ -107,3 +123,7 @@ Select TOP 2 * from Car;
 Select * from Person;
 Alter table Person add Balance int;
 Alter table Person drop column Balance;
+
+
+
+drop table Car
