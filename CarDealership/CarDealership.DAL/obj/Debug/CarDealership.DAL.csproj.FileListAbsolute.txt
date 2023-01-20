@@ -1,0 +1,5 @@
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.DAL\bin\Debug\CarDealership.DAL.dll
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.DAL\bin\Debug\CarDealership.DAL.pdb
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.DAL\obj\Debug\CarDealership.DAL.csproj.CoreCompileInputs.cache
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.DAL\obj\Debug\CarDealership.DAL.dll
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.DAL\obj\Debug\CarDealership.DAL.pdb

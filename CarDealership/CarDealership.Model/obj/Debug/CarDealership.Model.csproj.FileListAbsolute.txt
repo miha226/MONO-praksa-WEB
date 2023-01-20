@@ -1,0 +1,9 @@
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Model\obj\Debug\CarDealership.Model.csproj.AssemblyReference.cache
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Model\obj\Debug\CarDealership.Model.csproj.CoreCompileInputs.cache
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Model\bin\Debug\CarDealership.Model.dll
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Model\bin\Debug\CarDealership.Model.pdb
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Model\bin\Debug\CarDealership.Model.Common.dll
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Model\bin\Debug\CarDealership.Model.Common.pdb
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Model\obj\Debug\CarDealership.Model.csproj.CopyComplete
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Model\obj\Debug\CarDealership.Model.dll
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Model\obj\Debug\CarDealership.Model.pdb

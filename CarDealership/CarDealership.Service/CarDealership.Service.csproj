@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1D9CC63C-FA16-4BEF-B2B0-C43ADAA59F88}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CarDealership.Service</RootNamespace>
+    <AssemblyName>CarDealership.Service</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdressService.cs" />
+    <Compile Include="CarService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShopService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CarDealership.Common\CarDealership.Common.csproj">
+      <Project>{7d9f509c-51ea-4c9e-a943-95c24a0e6acf}</Project>
+      <Name>CarDealership.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CarDealership.Model\CarDealership.Model.csproj">
+      <Project>{08aeb160-dae0-4336-be70-51bcc2cfcbfb}</Project>
+      <Name>CarDealership.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CarDealership.Repository.Common\CarDealership.Repository.Common.csproj">
+      <Project>{5e41bbb0-30dc-4ce8-994e-21a6b28b5f48}</Project>
+      <Name>CarDealership.Repository.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CarDealership.Repository\CarDealership.Repository.csproj">
+      <Project>{21cea3f5-c49f-44e1-8957-efeb3c10a67f}</Project>
+      <Name>CarDealership.Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CarDealership.Service.Common\CarDealership.Service.Common.csproj">
+      <Project>{5d48750d-47f8-45c8-aec1-b80c166d31ae}</Project>
+      <Name>CarDealership.Service.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

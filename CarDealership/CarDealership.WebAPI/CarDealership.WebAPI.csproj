@@ -91,11 +91,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Adress.cs" />
-    <Compile Include="Models\Car.cs" />
-    <Compile Include="Models\DataHolder.cs" />
-    <Compile Include="Models\Employee.cs" />
-    <Compile Include="Models\Shop.cs" />
+    <Compile Include="Models\AdressRest.cs" />
+    <Compile Include="Models\CarRest.cs" />
+    <Compile Include="Models\CarUpdateDetailsRest.cs" />
+    <Compile Include="Models\ShopRest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -109,6 +108,24 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CarDealership.Common\CarDealership.Common.csproj">
+      <Project>{7d9f509c-51ea-4c9e-a943-95c24a0e6acf}</Project>
+      <Name>CarDealership.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CarDealership.Model.Common\CarDealership.Model.Common.csproj">
+      <Project>{72e9602d-92f5-4d27-98cd-9f2e9d5325e5}</Project>
+      <Name>CarDealership.Model.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CarDealership.Model\CarDealership.Model.csproj">
+      <Project>{08aeb160-dae0-4336-be70-51bcc2cfcbfb}</Project>
+      <Name>CarDealership.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CarDealership.Service\CarDealership.Service.csproj">
+      <Project>{1d9cc63c-fa16-4bef-b2b0-c43adaa59f88}</Project>
+      <Name>CarDealership.Service</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

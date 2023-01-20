@@ -1,0 +1,15 @@
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Repository\bin\Debug\CarDealership.Repository.dll
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Repository\bin\Debug\CarDealership.Repository.pdb
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Repository\obj\Debug\CarDealership.Repository.csproj.AssemblyReference.cache
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Repository\obj\Debug\CarDealership.Repository.csproj.CoreCompileInputs.cache
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Repository\obj\Debug\CarDealership.Repository.dll
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Repository\obj\Debug\CarDealership.Repository.pdb
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Repository\bin\Debug\CarDealership.Common.dll
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Repository\bin\Debug\CarDealership.Model.dll
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Repository\bin\Debug\CarDealership.Repository.Common.dll
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Repository\bin\Debug\CarDealership.Model.Common.dll
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Repository\bin\Debug\CarDealership.Common.pdb
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Repository\bin\Debug\CarDealership.Model.pdb
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Repository\bin\Debug\CarDealership.Repository.Common.pdb
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Repository\bin\Debug\CarDealership.Model.Common.pdb
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Repository\obj\Debug\CarDealership.Repository.csproj.CopyComplete
