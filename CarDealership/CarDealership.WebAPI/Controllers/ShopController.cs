@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using CarDealership.Model;
 using CarDealership.Service;
@@ -16,36 +17,36 @@ namespace CarDealership.WebAPI.Controllers
         public static ShopService shopService = new ShopService();
 
         // GET: api/Shop
-        public HttpResponseMessage Get()
+        public async Task<HttpResponseMessage> Get()
         {
-            List<Shop> shops = shopService.Get();
+            List<Shop> shops = await shopService.Get();
             if (shops.Any())
             {
-                List<ShopRest> shopsRest = new List<ShopRest>();
-                shops.ForEach(shop => shopsRest.Add(ShopRest.MapToShopRest(shop)));
-                return Request.CreateResponse(HttpStatusCode.OK, shopsRest);
+                List<ShopGetRest> shopsGetRest = new List<ShopGetRest>();
+                shops.ForEach(shop => shopsGetRest.Add(ShopGetRest.MapToShopGetRest(shop)));
+                return Request.CreateResponse(HttpStatusCode.OK, shopsGetRest);
             }
 
             return Request.CreateResponse(HttpStatusCode.NotFound, "There are no shoops saved");
         }
 
         // GET: api/Shop/5
-        public HttpResponseMessage Get(Guid id)
+        public async Task<HttpResponseMessage> Get(Guid id)
         {
-            Shop shop = shopService.Get(id);
+            Shop shop = await shopService.Get(id);
             if (shop!=null)
             {
-                ShopRest shopRest = ShopRest.MapToShopRest(shop);
-                return Request.CreateResponse(HttpStatusCode.OK, shopRest);
+                ShopGetRest shopGetRest = ShopGetRest.MapToShopGetRest(shop);
+                return Request.CreateResponse(HttpStatusCode.OK, shopGetRest);
             }
 
             return Request.CreateResponse(HttpStatusCode.NotFound, "There is no shop with id "+id);
         }
 
         // POST: api/Shop
-        public HttpResponseMessage Post(ShopRest shop)
+        public async Task<HttpResponseMessage> Post([FromBody]ShopRest shop)
         {
-            if (!shopService.Post(shop.MapToShop()))
+            if (!await shopService.Post(shop.MapToShop()))
             {
                 return Request.CreateResponse(HttpStatusCode.NotAcceptable, "Post failed");
             }
@@ -54,9 +55,9 @@ namespace CarDealership.WebAPI.Controllers
 
         // PUT: api/Shop/5
         [HttpPut]
-        public HttpResponseMessage UpdateShopName(Guid id, [FromBody]ShopRest shop)
+        public async Task<HttpResponseMessage> UpdateShopName(Guid id, [FromBody]ShopRest shop)
         {
-            if(shopService.UpdateShopName(id,shop.MapToShop()))
+            if(await shopService.UpdateShopName(id,shop.MapToShop()))
             {
                 return Request.CreateResponse(HttpStatusCode.OK, "Shop is updated");
             }
@@ -64,9 +65,9 @@ namespace CarDealership.WebAPI.Controllers
         }
 
         // DELETE: api/Shop/5
-        public HttpResponseMessage Delete(Guid id)
+        public async Task<HttpResponseMessage> Delete(Guid id)
         {
-            if(shopService.Delete(id))
+            if(await shopService .Delete(id))
             { 
                 return Request.CreateResponse(HttpStatusCode.OK, "Delete completed");
             }

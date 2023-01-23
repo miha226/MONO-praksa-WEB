@@ -13,17 +13,17 @@ namespace CarDealership.Repository
     {
         public static string connectionString = @"Data Source=st-02\SQLEXPRESS;Initial Catalog=CarDealership;Integrated Security=True";
 
-        // GET: api/Shop
-        public List<Shop> Get()
+        
+        public async Task<List<Shop>> Get()
         {
             List<Shop> shops = new List<Shop>();
             SqlConnection connection = new SqlConnection(connectionString);
             SqlCommand command = new SqlCommand("select * from Shop left join Adress on Shop.Adress=Adress.AdressId", connection);
-            connection.Open();
+            await connection.OpenAsync();
 
-            SqlDataReader reader = command.ExecuteReader();
+            SqlDataReader reader = await command.ExecuteReaderAsync();
 
-            while (reader.Read())
+            while (await reader.ReadAsync())
             {
                 shops.Add(new Shop()
                 {
@@ -44,18 +44,17 @@ namespace CarDealership.Repository
             return shops;
         }
 
-        // GET: api/Shop/5
-        public Shop Get(Guid id)
+        
+        public async Task<Shop> Get(Guid id)
         {
             Shop shop = null;
             SqlConnection connection = new SqlConnection(connectionString);
-            SqlCommand command = new SqlCommand("select * from Shop left join Adress on Shop.Adress=Adress.AdressId where ShopId='" +
-                id + "'", connection);
-            connection.Open();
+            SqlCommand command = new SqlCommand("select * from Shop left join Adress on Shop.Adress=Adress.AdressId where ShopId=@id", connection);
+            command.Parameters.AddWithValue("@id", id);
+            await connection.OpenAsync();
+            SqlDataReader reader = await command.ExecuteReaderAsync();
 
-            SqlDataReader reader = command.ExecuteReader();
-
-            while (reader.Read())
+            while (await reader.ReadAsync())
             {
                 shop = new Shop()
                 {
@@ -77,17 +76,20 @@ namespace CarDealership.Repository
         }
 
         
-        public bool Post(Shop shop)
+        public async Task<bool> Post(Shop shop)
         {
             
             SqlConnection connection = new SqlConnection(connectionString);
-            SqlCommand command = new SqlCommand("Insert into Shop (ShopName ,Adress) values " +
-                "('" + shop.ShopName + "','" + shop.ShopAdress.AdressId + "')", connection);
+            SqlCommand command = new SqlCommand("Insert into Shop (ShopId,ShopName ,Adress) values " +
+                "(@id,@shopname, @shopAdress)", connection);
+            command.Parameters.AddWithValue("@id", shop.ShopId);
+            command.Parameters.AddWithValue("@shopName", shop.ShopName);
+            command.Parameters.AddWithValue("@shopAdress", shop.ShopAdress.AdressId);
 
-            connection.Open();
+            await connection.OpenAsync();
             try
             {
-                SqlDataReader reader = command.ExecuteReader();
+                SqlDataReader reader = await command.ExecuteReaderAsync();
             }
             catch (Exception)
             {
@@ -99,17 +101,18 @@ namespace CarDealership.Repository
             return true;
         }
 
-        // PUT: api/Shop/5
         
-        public bool UpdateShopName(Guid id,  Shop shop)
+        
+        public async Task<bool> UpdateShopName(Guid id,  Shop shop)
         {
             Shop updatedShop = null;
             SqlConnection connection = new SqlConnection(connectionString);
 
-            SqlCommand command = new SqlCommand("Select * from Shop where ShopId='" + id + "'", connection);
-            connection.Open();
-            SqlDataReader reader = command.ExecuteReader();
-            while (reader.Read())
+            SqlCommand command = new SqlCommand("Select * from Shop where ShopId=@id", connection);
+            command.Parameters.AddWithValue("@id", id);
+            await connection.OpenAsync();
+            SqlDataReader reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
             {
                 updatedShop = new Shop()
                 {
@@ -119,8 +122,10 @@ namespace CarDealership.Repository
             reader.Close();
             if (updatedShop.ShopName != null)
             {
-                command = new SqlCommand("Update Shop set ShopName='" + updatedShop.ShopName + "' where ShopId='" + id + "'", connection);
-                reader = command.ExecuteReader();
+                command = new SqlCommand("Update Shop set ShopName=@shopName where ShopId=@id", connection);
+                command.Parameters.AddWithValue("@shopName", updatedShop.ShopName);
+                command.Parameters.AddWithValue("@id", id);
+                reader = await command.ExecuteReaderAsync();
                 reader.Close();
                 connection.Close();
                 return true;
@@ -129,18 +134,30 @@ namespace CarDealership.Repository
             return false;
         }
 
-        // DELETE: api/Shop/5
-        public bool Delete(Guid id)
+        
+        public async Task<bool> Delete(Guid id)
         {
             SqlConnection connection = new SqlConnection(connectionString);
-            SqlCommand command = new SqlCommand("Select * from Shop where ShopId='" + id + "'", connection);
-            connection.Open();
-            SqlDataReader reader = command.ExecuteReader();
-            while (reader.Read())
+            SqlCommand command = new SqlCommand("Select * from Shop where ShopId=@id", connection);
+            command.Parameters.AddWithValue("@id", id);
+            await connection.OpenAsync();
+            SqlDataReader reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
             {
                 reader.Close();
-                command = new SqlCommand("Delete from Shop where ShopId='" + id + "'", connection);
-                command.ExecuteNonQuery();
+                command = new SqlCommand("Delete from Shop where ShopId=@id", connection);
+                command.Parameters.AddWithValue("@id", id);
+                try
+                {
+                   await command.ExecuteNonQueryAsync();
+                }
+                catch (Exception)
+                {
+                    reader.Close();
+                    connection.Close();
+                    return false;
+                    throw;
+                }
                 reader.Close();
                 connection.Close();
                 return true;

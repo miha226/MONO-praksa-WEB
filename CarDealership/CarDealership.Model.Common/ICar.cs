@@ -12,7 +12,7 @@ namespace CarDealership.Model.Common
         Guid StoredInShop { get; set; }
         string ManufacturerName { get; set; }
         string Model { get; set; }
-        int Year { get; set; }
+        DateTime? Year { get; set; }
         int TopSpeed { get; set; }
         string Color { get; set; }
         int KilometersTraveled { get; set; }

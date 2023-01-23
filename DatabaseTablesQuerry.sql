@@ -1,22 +1,23 @@
 CREATE TABLE Adress(
-AdressId uniqueidentifier PRIMARY KEY default newID(),
+AdressId uniqueidentifier PRIMARY KEY,
 PostNumber int,
 City varchar(15),
 Street varchar (40)
 );
-
+drop table Adress
 
 CREATE TABLE Shop(
-ShopId uniqueidentifier PRIMARY KEY default newID(),
+ShopId uniqueidentifier PRIMARY KEY,
 ShopName varchar(30) not null,
 Adress uniqueidentifier FOREIGN KEY REFERENCES Adress(AdressId) UNIQUE
 )
+drop table Shop
 
 select * from Shop left join Adress on Shop.Adress=Adress.AdressId
  full outer join Car on Shop.ShopId=Car.StoredInShop  where ShopId='F3905678-3478-4262-9048-3845CDC998B6'
 
 select * from Adress
-Insert into Shop (ShopName ,Adress) values ('test2','81BB34FC-A2C4-4FD6-A0BB-684D051927C8');
+Insert into Shop (ShopId,ShopName ,Adress) values (newid(),'test2','A8AAF19B-DB21-4FFB-9B1A-108200D919D6');
 
 
 CREATE TABLE Person(
@@ -31,20 +32,22 @@ Shop uniqueidentifier FOREIGN KEY REFERENCES Shop(ShopId),
 Position varchar(30)
 );
 
-
+drop table Employee
 
 
 
 CREATE TABLE Car(
-CarId uniqueidentifier PRIMARY KEY default newID(),
+CarId uniqueidentifier PRIMARY KEY,
 StoredInShop uniqueidentifier FOREIGN KEY REFERENCES Shop(ShopId),
-YearOfManufacture int not null,
+YearOfManufacture Date not null,
 KilometersTraveled int not null,
 Color varchar(20) not null,
 ManufacturerName varchar(20) not null,
 Model varchar(20) not null,
 TopSpeed int not null
 );
+
+DROP table Car
 
 
 

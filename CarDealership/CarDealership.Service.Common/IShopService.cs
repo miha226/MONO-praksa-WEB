@@ -9,10 +9,10 @@ namespace CarDealership.Service.Common
 {
     public interface IShopService
     {
-        bool UpdateShopName(Guid id, Shop shop);
-        List<Shop> Get();
-        Shop Get(Guid id);
-        bool Delete(Guid id);
-        bool Post(Shop shop);
+        Task<bool> UpdateShopName(Guid id, Shop shop);
+        Task<List<Shop>> Get();
+        Task<Shop> Get(Guid id);
+        Task<bool> Delete(Guid id);
+        Task<bool> Post(Shop shop);
     }
 }

@@ -12,30 +12,31 @@ namespace CarDealership.Service
     public class ShopService : IShopService
     {
         private static ShopRepository shopRepository = new ShopRepository();
-        public bool Delete(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
-            return shopRepository.Delete(id);
+            return await shopRepository.Delete(id);
         }
 
-        public List<Shop> Get()
+        public async Task<List<Shop>> Get()
         {
-            return shopRepository.Get();
+            return await shopRepository.Get();
         }
 
-        public Shop Get(Guid id)
+        public async Task<Shop> Get(Guid id)
         {
-            return shopRepository.Get(id);
+            return await shopRepository.Get(id);
         }
 
-        public bool Post(Shop shop)
+        public async Task<bool> Post(Shop shop)
         {
-            return shopRepository.Post(shop);
+            shop.ShopId = Guid.NewGuid();
+            return await shopRepository.Post(shop);
         }
 
 
-        public bool UpdateShopName(Guid id, Shop shop)
+        public  async Task<bool> UpdateShopName(Guid id, Shop shop)
         {
-            return shopRepository.UpdateShopName(id, shop);
+            return await shopRepository.UpdateShopName(id, shop);
         }
     }
 }

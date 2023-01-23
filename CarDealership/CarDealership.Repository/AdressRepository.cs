@@ -14,17 +14,17 @@ namespace CarDealership.Repository
         public static string connectionString = @"Data Source=st-02\SQLEXPRESS;Initial Catalog=CarDealership;Integrated Security=True";
 
 
-        // GET: api/Adress
-        public List<Adress> Get()
+        
+        public async Task<List<Adress>> Get()
         {
             List<Adress> adresses = new List<Adress>();
             SqlConnection connection = new SqlConnection(connectionString);
             SqlCommand command = new SqlCommand("select * from Adress", connection);
-            connection.Open();
+            await connection.OpenAsync();
 
-            SqlDataReader reader = command.ExecuteReader();
+            SqlDataReader reader = await command.ExecuteReaderAsync();
 
-            while (reader.Read())
+            while (await reader.ReadAsync())
             {
                 adresses.Add(new Adress()
                 {
@@ -42,18 +42,18 @@ namespace CarDealership.Repository
             return adresses;
         }
 
-        // GET: api/Adress/5
-        public Adress Get(Guid id)
+        
+        public async Task<Adress> Get(Guid id)
         {
             Adress adress = null;
             SqlConnection connection = new SqlConnection(connectionString);
             SqlCommand command = new SqlCommand("select * from Adress where AdressId='" +
                 id + "'", connection);
-            connection.Open();
+            await connection.OpenAsync();
 
-            SqlDataReader reader = command.ExecuteReader();
+            SqlDataReader reader = await command.ExecuteReaderAsync();
 
-            while (reader.Read())
+            while (await reader.ReadAsync())
             {
                 adress = new Adress()
                 {
@@ -71,21 +71,23 @@ namespace CarDealership.Repository
             return adress;
         }
 
-        // POST: api/Adress
-        public ResponseWrapper<bool> Post( Adress adress)
+        
+        public async Task<ResponseWrapper<bool>> Post( Adress adress)
         {
-            if(adress.Street == null || adress.City == null || adress.Street==null || adress.PostNumber==0)
-            {
-                return new ResponseWrapper<bool> { Data = false, Message = "Fields can't be empty" };
-            }
             SqlConnection connection = new SqlConnection(connectionString);
-            SqlCommand command = new SqlCommand("Insert into Adress (PostNumber, City, Street ) " +
-                "Values (" + adress.PostNumber + ", '" + adress.City + "', '" + adress.Street + "');", connection);
+            SqlCommand command = new SqlCommand("Insert into Adress (AdressId,PostNumber, City, Street ) " +
+                "Values (@id,@postNumber, @citiy, @street);", connection);
+            command.Parameters.AddWithValue("@id", adress.AdressId);
+            command.Parameters.AddWithValue("@postNumber", adress.PostNumber);
+            command.Parameters.AddWithValue("@citiy", adress.City);
+            command.Parameters.AddWithValue("@street", adress.Street);
 
-            connection.Open();
+            await connection.OpenAsync();
             try
             {
-                SqlDataReader reader = command.ExecuteReader();
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+                connection.Close();
+                return new ResponseWrapper<bool> { Data = true, Message = "Adress is added in database" };
             }
             catch (Exception ex)
             {
@@ -93,22 +95,20 @@ namespace CarDealership.Repository
                 return new ResponseWrapper<bool> { Data = false, Message = ex.Message };
                 throw;
             }
-
-            connection.Close();
-            return new ResponseWrapper<bool> { Data = true, Message = "Adress is added in database" };
         }
 
-        // PUT: api/Adress/5
         
-        public ResponseWrapper<bool> ChangeAdress(Guid id,  Adress adress)
+        
+        public async Task<ResponseWrapper<bool>> ChangeAdress(Guid id,  Adress adress)
         {
             Adress updatedAdress = null;
             SqlConnection connection = new SqlConnection(connectionString);
 
-            SqlCommand command = new SqlCommand("Select * from Adress where AdressId='" + id + "'", connection);
+            SqlCommand command = new SqlCommand("Select * from Adress where AdressId=@id", connection);
+            command.Parameters.AddWithValue("@id", id);
             connection.Open();
-            SqlDataReader reader = command.ExecuteReader();
-            while (reader.Read())
+            SqlDataReader reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
             {
                 updatedAdress = new Adress()
                 {
@@ -120,9 +120,13 @@ namespace CarDealership.Repository
             reader.Close();
             if (updatedAdress != null)
             {
-                command = new SqlCommand("Update Adress set PostNumber='" + updatedAdress.PostNumber +
-                    "', City='" + updatedAdress.City + "', Street='" + updatedAdress.Street + "' where AdressId='" + id + "'", connection);
-                reader = command.ExecuteReader();
+                command = new SqlCommand("Update Adress set PostNumber=@postNumber"  +
+                    ", City=@city, Street=@street where AdressId=@id", connection);
+                command.Parameters.AddWithValue("@postNumber", updatedAdress.PostNumber);
+                command.Parameters.AddWithValue("@street", updatedAdress.Street);
+                command.Parameters.AddWithValue("@city", updatedAdress.City);
+                command.Parameters.AddWithValue("@id", id);
+                reader = await command.ExecuteReaderAsync();
                 reader.Close();
                 connection.Close();
                 return new ResponseWrapper<bool> { Data = true, Message = "Adress is updated" };
@@ -131,24 +135,28 @@ namespace CarDealership.Repository
             return new ResponseWrapper<bool> { Data = false, Message = "There is no sent adress in the database" };
         }
 
-        // DELETE: api/Adress/5
-        public ResponseWrapper<bool> Delete(Guid id)
+       
+        public async Task<ResponseWrapper<bool>> Delete(Guid id)
         {
             SqlConnection connection = new SqlConnection(connectionString);
-            SqlCommand command = new SqlCommand("Select * from Adress where AdressId='" + id + "'", connection);
-            connection.Open();
-            SqlDataReader reader = command.ExecuteReader();
-            while (reader.Read())
+            SqlCommand command = new SqlCommand("Select * from Adress where AdressId=@id", connection);
+            command.Parameters.AddWithValue("@id", id);
+            await connection.OpenAsync();
+            SqlDataReader reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
             {
                 reader.Close();
-                command = new SqlCommand("Delete from Adress where AdressId='" + id + "'", connection);
+                command = new SqlCommand("Delete from Adress where AdressId=@id", connection);
+                command.Parameters.AddWithValue("@id", id);
                 try
                 {
-                    command.ExecuteNonQuery();
+                    await command.ExecuteNonQueryAsync();
 
                 }
                 catch (Exception ex)
                 {
+                    reader.Close();
+                    connection.Close();
                     return new ResponseWrapper<bool> { Data = false, Message=ex.Message };
                     throw;
                 }

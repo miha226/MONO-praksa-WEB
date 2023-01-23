@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using CarDealership.Model;
 using CarDealership.Service;
@@ -17,9 +18,9 @@ namespace CarDealership.WebAPI.Controllers
 
 
         // GET: api/Adress
-        public HttpResponseMessage Get()
+        public async Task<HttpResponseMessage> Get()
         {
-            List<Adress> adresses = adressService.Get();
+            List<Adress> adresses = await adressService.Get();
             if (adresses.Any())
             {
                 List<AdressRest> adressesRest = new List<AdressRest>();
@@ -30,9 +31,9 @@ namespace CarDealership.WebAPI.Controllers
         }
 
         // GET: api/Adress/5
-        public HttpResponseMessage Get(Guid id)
+        public async Task<HttpResponseMessage> Get(Guid id)
         {
-            Adress adress = adressService.Get(id);
+            Adress adress = await adressService.Get(id);
             if (adress!=null)
             {
 
@@ -43,9 +44,14 @@ namespace CarDealership.WebAPI.Controllers
         }
 
         // POST: api/Adress
-        public HttpResponseMessage Post([FromBody]AdressRest adress)
+        public async Task<HttpResponseMessage> Post([FromBody]AdressPostRest adress)
         {
-            var response = adressService.Post(adress.MapToAdress());
+            if (!ModelState.IsValid)
+            {
+                return Request.CreateResponse(HttpStatusCode.NotAcceptable, "Adress object is incomplete");
+
+            }
+            var response = await adressService.Post(adress.MapToAdress());
             if (!response.Data)
             {
                 return Request.CreateResponse(HttpStatusCode.NotAcceptable, response.Message);
@@ -55,9 +61,9 @@ namespace CarDealership.WebAPI.Controllers
 
         // PUT: api/Adress/5
         [HttpPut]
-        public HttpResponseMessage ChangeAdress(Guid id, [FromBody]AdressRest adress)
+        public async Task<HttpResponseMessage> ChangeAdress(Guid id, [FromBody]AdressRest adress)
         {
-            var response = adressService.ChangeAdress(id, adress.MapToAdress());
+            var response = await adressService.ChangeAdress(id, adress.MapToAdress());
             if (response.Data)
             {
                 return Request.CreateResponse(HttpStatusCode.OK, response.Message);
@@ -66,9 +72,9 @@ namespace CarDealership.WebAPI.Controllers
         }
 
         // DELETE: api/Adress/5
-        public HttpResponseMessage Delete(Guid id)
+        public async Task<HttpResponseMessage> Delete(Guid id)
         {
-            var response = adressService.Delete(id);
+            var response = await adressService.Delete(id);
             if (response.Data)
             {
                 return Request.CreateResponse(HttpStatusCode.OK, response.Message);

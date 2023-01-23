@@ -13,34 +13,35 @@ namespace CarDealership.Service
     {
         private static AdressRepository adressRepository = new AdressRepository();
 
-        public List<Adress> Get()
+        public async Task<List<Adress>> Get()
         {
-            return adressRepository.Get();
+            return await adressRepository.Get();
         }
 
        
-        public Adress Get(Guid id)
+        public async Task<Adress> Get(Guid id)
         {
-            return adressRepository.Get(id);
+            return await adressRepository.Get(id);
         }
 
        
-        public ResponseWrapper<bool> Post(Adress adress)
+        public async Task<ResponseWrapper<bool>> Post(Adress adress)
         {
-            return adressRepository.Post(adress);
+            adress.AdressId = Guid.NewGuid();
+            return await adressRepository.Post(adress);
         }
 
         
 
-        public ResponseWrapper<bool> ChangeAdress(Guid id, Adress adress)
+        public async Task<ResponseWrapper<bool>> ChangeAdress(Guid id, Adress adress)
         {
-            return adressRepository.ChangeAdress(id, adress);
+            return await adressRepository.ChangeAdress(id, adress);
         }
 
 
-        public ResponseWrapper<bool> Delete(Guid id)
+        public async Task<ResponseWrapper<bool>> Delete(Guid id)
         {
-            return adressRepository.Delete(id);
+            return await adressRepository.Delete(id);
         }
     }
 }

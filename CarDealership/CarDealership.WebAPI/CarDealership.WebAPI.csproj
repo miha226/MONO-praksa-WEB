@@ -91,9 +91,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AdressPostRest.cs" />
     <Compile Include="Models\AdressRest.cs" />
+    <Compile Include="Models\CarPostRest.cs" />
     <Compile Include="Models\CarRest.cs" />
     <Compile Include="Models\CarUpdateDetailsRest.cs" />
+    <Compile Include="Models\ShopGetRest.cs" />
     <Compile Include="Models\ShopRest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

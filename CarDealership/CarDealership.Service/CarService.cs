@@ -13,29 +13,30 @@ namespace CarDealership.Service
     {
         private static CarRepository carRepository = new CarRepository();
 
-        public ResponseWrapper<bool> Delete(Guid id)
+        public async Task<ResponseWrapper<bool>> Delete(Guid id)
         {
-            return carRepository.Delete(id);
+            return await carRepository.Delete(id);
         }
 
-        public List<Car> Get()
+        public async Task<List<Car>> GetAsync()
         {
-            return carRepository.Get();
+            return await carRepository.GetAsync();
         }
 
-        public Car Get(Guid id)
+        public async Task<Car> Get(Guid id)
         {
-            return carRepository.Get(id);
+            return await carRepository.Get(id);
         }
 
-        public ResponseWrapper<bool> Post(Car car)
+        public async Task<ResponseWrapper<bool>> Post(Car car)
         {
-            return carRepository.Post(car);
+            car.Id = Guid.NewGuid();
+            return await carRepository.Post(car);
         }
 
-        public ResponseWrapper<bool> Put(Guid id, Car car)
+        public async Task<ResponseWrapper<bool>> Put(Guid id, Car car)
         {
-            return carRepository.Put(id, car);
+            return await carRepository.Put(id, car);
         }
     }
 }

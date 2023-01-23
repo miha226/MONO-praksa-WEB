@@ -2,36 +2,37 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using CarDealership.Model.Common;
 using CarDealership.Model;
+using CarDealership.Model.Common;
 
 namespace CarDealership.WebAPI.Models
 {
-    public class ShopRest
+    public class ShopGetRest
     {
         public Guid ShopId { get; set; }
         public string ShopName { get; set; }
-        public Guid ShopAdress { get; set; }
+        public IAdress ShopAdress { get; set; }
 
 
-        public static ShopRest MapToShopRest(Shop shop)
+        public static ShopGetRest MapToShopGetRest(Shop shop)
         {
-            return new ShopRest
+            return new ShopGetRest
             {
                 ShopName = shop.ShopName,
                 ShopId = shop.ShopId,
-                ShopAdress =  shop.ShopAdress.AdressId
+                ShopAdress = shop.ShopAdress
             };
         }
-
         public Shop MapToShop()
         {
             return new Shop
             {
-                ShopAdress = new Adress {AdressId= this.ShopAdress },
+                ShopAdress = this.ShopAdress,
                 ShopId = this.ShopId,
                 ShopName = this.ShopName
             };
         }
-    }  
+
+      
+    }
 }

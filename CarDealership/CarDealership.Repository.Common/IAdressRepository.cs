@@ -9,10 +9,10 @@ namespace CarDealership.Repository.Common
 {
     public interface IAdressRepository
     {
-        List<Adress> Get();
-        Adress Get(Guid id);
-        ResponseWrapper<bool> Delete(Guid id);
-        ResponseWrapper<bool> Post(Adress adress);
-        ResponseWrapper<bool> ChangeAdress(Guid id, Adress adress);
+        Task<List<Adress>> Get();
+        Task<Adress> Get(Guid id);
+        Task<ResponseWrapper<bool>> Delete(Guid id);
+        Task<ResponseWrapper<bool>> Post(Adress adress);
+        Task<ResponseWrapper<bool>> ChangeAdress(Guid id, Adress adress);
     }
 }

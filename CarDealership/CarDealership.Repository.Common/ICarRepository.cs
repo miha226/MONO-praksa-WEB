@@ -9,10 +9,10 @@ namespace CarDealership.Repository.Common
 {
     public interface ICarRepository
     {
-        List<Car> Get();
-        Car Get(Guid id);
-        ResponseWrapper<bool> Post(Car car);
-        ResponseWrapper<bool> Put(Guid id, Car car);
-        ResponseWrapper<bool> Delete(Guid id);
+        Task<List<Car>> GetAsync();
+        Task<Car> Get(Guid id);
+        Task<ResponseWrapper<bool>> Post(Car car);
+        Task<ResponseWrapper<bool>> Put(Guid id, Car car);
+        Task<ResponseWrapper<bool>> Delete(Guid id);
     }
 }

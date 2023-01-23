@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CarDealership.Model;
 using CarDealership.Repository.Common;
-using CarDealership.Model;
+using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace CarDealership.Repository
 {
@@ -13,26 +11,24 @@ namespace CarDealership.Repository
     {
         public static string connectionString = @"Data Source=st-02\SQLEXPRESS;Initial Catalog=CarDealership;Integrated Security=True";
 
-        // GET: api/Car
-        public List<Car> Get()
+        
+        public async Task<List<Car>> GetAsync()
         {
-
-
             List<Car> cars = new List<Car>();
             SqlConnection connection = new SqlConnection(connectionString);
             SqlCommand command = new SqlCommand("Select * from Car", connection);
-            connection.Open();
+            await connection.OpenAsync();
 
-            SqlDataReader reader = command.ExecuteReader();
+            SqlDataReader reader = await command.ExecuteReaderAsync();
 
-            while (reader.Read())
+            while (await reader.ReadAsync())
             {
                 cars.Add(new Car()
                 {
                     Color = reader["Color"].ToString(),
                     Id = Guid.Parse(reader["CarId"].ToString()),
                     KilometersTraveled = int.Parse(reader["KilometersTraveled"].ToString()),
-                    Year = int.Parse(reader["YearOfManufacture"].ToString()),
+                    Year = DateTime.Parse(reader["YearOfManufacture"].ToString()),
                     ManufacturerName = reader["ManufacturerName"].ToString(),
                     Model = reader["Model"].ToString(),
                     TopSpeed = int.Parse(reader["TopSpeed"].ToString()),
@@ -46,56 +42,63 @@ namespace CarDealership.Repository
             return cars;
         }
 
-        // GET: api/Car/5
-        public Car Get(Guid id)
+        
+        public async Task<Car> Get(Guid id)
         {
             Car car = null;
             SqlConnection connection = new SqlConnection(connectionString);
-            SqlCommand command = new SqlCommand("Select * from Car where CarId='" + id + "'", connection);
-            connection.Open();
+            SqlCommand command = new SqlCommand("Select * from Car where CarId=@id", connection);
+            command.Parameters.AddWithValue("@id", id);
+            await connection.OpenAsync();
 
-            SqlDataReader reader = command.ExecuteReader();
+            SqlDataReader reader = await command.ExecuteReaderAsync();
 
-            while (reader.Read())
+            while (await reader.ReadAsync())
             {
-                 car = new Car()
+                car = new Car()
                 {
                     Color = reader["Color"].ToString(),
                     Id = Guid.Parse(reader["CarId"].ToString()),
                     KilometersTraveled = int.Parse(reader["KilometersTraveled"].ToString()),
-                    Year = int.Parse(reader["YearOfManufacture"].ToString()),
+                    Year = DateTime.Parse(reader["YearOfManufacture"].ToString()),
                     ManufacturerName = reader["ManufacturerName"].ToString(),
                     Model = reader["Model"].ToString(),
                     TopSpeed = int.Parse(reader["TopSpeed"].ToString()),
                     StoredInShop = Guid.Parse(reader["StoredInShop"].ToString())
                 };
-                
+
             }
+            reader.Close();
             connection.Close();
             return car;
-
         }
 
-        // POST: api/Car
-        public ResponseWrapper<bool> Post(Car car)
+        
+        public async Task<ResponseWrapper<bool>> Post(Car car)
         {
-            if(car.Color == null || car.KilometersTraveled == 0 || car.ManufacturerName == null 
-                || car.Model == null || car.StoredInShop == null || car.TopSpeed == 0 || car.Year == 0 )
-            {
-                return new ResponseWrapper<bool> { Data = false, Message = "Fields can't be empty" };
-            }
+            
             SqlConnection connection = new SqlConnection(connectionString);
-            SqlCommand command = new SqlCommand("Insert into Car (ManufacturerName,Model,YearOfManufacture,KilometersTraveled,TopSpeed,Color,StoredInShop) " +
-            "values('" + car.ManufacturerName + "', '" + car.Model + "', " + car.Year + ", " + car.KilometersTraveled + ", " + car.TopSpeed +
-            ", '" + car.Color + "', '" + car.StoredInShop + "')", connection);
+            SqlCommand command = new SqlCommand("Insert into Car (CarId,ManufacturerName,Model,YearOfManufacture,KilometersTraveled,TopSpeed,Color,StoredInShop) " +
+            "values(@id,@manufacturerName, @model, @yearOfManufacture, @kilometersTraveled, @topSpeed" +
+            ", @color, @storedInshop)", connection);
 
-            connection.Open();
+            command.Parameters.AddWithValue("@color", car.Color);
+            command.Parameters.AddWithValue("@storedInshop", car.StoredInShop);
+            command.Parameters.AddWithValue("@yearOfManufacture", car.Year);
+            command.Parameters.AddWithValue("@manufacturerName", car.ManufacturerName);
+            command.Parameters.AddWithValue("@model", car.Model);
+            command.Parameters.AddWithValue("@topSpeed", car.TopSpeed);
+            command.Parameters.AddWithValue("@kilometersTraveled", car.KilometersTraveled);
+            command.Parameters.AddWithValue("@id", car.Id);
+
+            await connection.OpenAsync();
             try
             {
-                SqlDataReader reader = command.ExecuteReader();
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+                reader.Close();
             }
             catch (Exception ex)
-            {
+            {   
                 return new ResponseWrapper<bool> { Data = false, Message = ex.Message };
                 throw;
             }
@@ -108,21 +111,22 @@ namespace CarDealership.Repository
 
 
 
-        public ResponseWrapper<bool> Put(Guid id, Car car)
+        public async Task<ResponseWrapper<bool>> Put(Guid id, Car car)
         {
             Car updatedCar = null;
             SqlConnection connection = new SqlConnection(connectionString);
 
-            SqlCommand command = new SqlCommand("Select * from Car where CarId='" + id + "'", connection);
-            connection.Open();
-            SqlDataReader reader = command.ExecuteReader();
-            while (reader.Read())
+            SqlCommand command = new SqlCommand("Select * from Car where CarId=@id", connection);
+            command.Parameters.AddWithValue("@id", id);
+            await connection.OpenAsync();
+            SqlDataReader reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
             {
                 updatedCar = new Car()
                 {
                     Color = car.Color ?? reader["Color"].ToString(),
                     KilometersTraveled = car.KilometersTraveled == 0 ? int.Parse(reader["KilometersTraveled"].ToString()) : car.KilometersTraveled,
-                    Year = car.Year == 0 ? int.Parse(reader["YearOfManufacture"].ToString()) : car.Year,
+                    Year = car.Year == null ? DateTime.Parse(reader["YearOfManufacture"].ToString()) : car.Year,
                     ManufacturerName = car.ManufacturerName ?? reader["ManufacturerName"].ToString(),
                     Model = car.Model ?? reader["Model"].ToString(),
                     TopSpeed = car.TopSpeed == 0 ? int.Parse(reader["TopSpeed"].ToString()) : car.TopSpeed
@@ -131,12 +135,20 @@ namespace CarDealership.Repository
             reader.Close();
             if (updatedCar != null)
             {
-                command = new SqlCommand("Update car set Color='" + updatedCar.Color + "', YearOfManufacture=" + updatedCar.Year +
-                    ", ManufacturerName='" + updatedCar.ManufacturerName +
-                    "', Model='" + updatedCar.Model +
-                    "', TopSpeed=" + updatedCar.TopSpeed +
-                    ", KilometersTraveled=" + updatedCar.KilometersTraveled + " where CarId='"+id+"'", connection);
-                reader = command.ExecuteReader();
+                command = new SqlCommand("Update car set Color=@color, YearOfManufacture=@yearOfManufacture" +
+                    ", ManufacturerName=@manufacturerName" +
+                    ", Model=@model, TopSpeed=@topSpeed" +
+                    ", KilometersTraveled=@kilometersTraveled where CarId=@id", connection);
+
+                command.Parameters.AddWithValue("@color", updatedCar.Color);
+                command.Parameters.AddWithValue("@yearOfManufacture", updatedCar.Year);
+                command.Parameters.AddWithValue("@manufacturerName", updatedCar.ManufacturerName);
+                command.Parameters.AddWithValue("@model", updatedCar.Model);
+                command.Parameters.AddWithValue("@topSpeed", updatedCar.TopSpeed);
+                command.Parameters.AddWithValue("@kilometersTraveled", updatedCar.KilometersTraveled);
+                command.Parameters.AddWithValue("@ID", id);
+
+                reader = await command.ExecuteReaderAsync();
                 reader.Close();
                 connection.Close();
                 return new ResponseWrapper<bool> { Data = true, Message = "Car is updated" };
@@ -146,18 +158,30 @@ namespace CarDealership.Repository
         }
 
 
-        // DELETE: api/Car/5
-        public ResponseWrapper<bool> Delete( Guid id)
+        
+        public async Task<ResponseWrapper<bool>> Delete(Guid id)
         {
             SqlConnection connection = new SqlConnection(connectionString);
-            SqlCommand command = new SqlCommand("Select * from Car where CarId='" + id + "'", connection);
-            connection.Open();
-            SqlDataReader reader = command.ExecuteReader();
-            while (reader.Read())
+            SqlCommand command = new SqlCommand("Select * from Car where CarId=@id", connection);
+            command.Parameters.AddWithValue("@id", id);
+            await connection.OpenAsync();
+            SqlDataReader reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
             {
                 reader.Close();
-                command = new SqlCommand("Delete from Car where CarId='" + id + "'", connection);
-                command.ExecuteNonQuery();
+                command = new SqlCommand("Delete from Car where CarId=@id", connection);
+                command.Parameters.AddWithValue("@id", id);
+                try
+                {
+                   await command.ExecuteNonQueryAsync();
+                }
+                catch (Exception ex)
+                {
+                    reader.Close();
+                    connection.Close();
+                    return new ResponseWrapper<bool> { Data = false, Message = ex.Message };
+                    throw;
+                }
                 reader.Close();
                 connection.Close();
                 return new ResponseWrapper<bool> { Data = true, Message = "Car with id " + id + " is deleted" };
