@@ -1,22 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using CarDealership.Model;
-using CarDealership.Service;
+using CarDealership.Service.Common;
 using CarDealership.WebAPI.Models;
 
 namespace CarDealership.WebAPI.Controllers
 {
     public class AdressController : ApiController
     {
-        public static AdressService adressService = new AdressService();
+        private IAdressService adressService;
 
-
+        public AdressController(IAdressService adressService)
+        {
+            this.adressService = adressService;
+        }
         // GET: api/Adress
         public async Task<HttpResponseMessage> Get()
         {

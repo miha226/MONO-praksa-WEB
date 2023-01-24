@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using CarDealership.Model;
-using CarDealership.Service;
+using CarDealership.Service.Common;
 using CarDealership.WebAPI.Models;
 
 namespace CarDealership.WebAPI.Controllers
@@ -14,7 +14,12 @@ namespace CarDealership.WebAPI.Controllers
     public class ShopController : ApiController
     {
 
-        public static ShopService shopService = new ShopService();
+        private IShopService shopService ;
+
+        public ShopController(IShopService shopService)
+        {
+            this.shopService = shopService;
+        }
 
         // GET: api/Shop
         public async Task<HttpResponseMessage> Get()

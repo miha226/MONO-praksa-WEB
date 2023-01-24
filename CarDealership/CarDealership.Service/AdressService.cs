@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using CarDealership.Service.Common;
-using CarDealership.Repository;
 using CarDealership.Model;
+using CarDealership.Repository.Common;
 
 namespace CarDealership.Service
 {
     public class AdressService : IAdressService
     {
-        private static AdressRepository adressRepository = new AdressRepository();
+        private IAdressRepository adressRepository;
 
+        public AdressService(IAdressRepository adressRepository)
+        {
+            this.adressRepository = adressRepository;
+        }
         public async Task<List<Adress>> Get()
         {
             return await adressRepository.Get();

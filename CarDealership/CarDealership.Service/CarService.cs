@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using CarDealership.Service.Common;
-using CarDealership.Repository;
 using CarDealership.Model;
+using CarDealership.Repository.Common;
 
 namespace CarDealership.Service
 {
     public class CarService : ICarService
     {
-        private static CarRepository carRepository = new CarRepository();
+        private ICarRepository carRepository;
+
+        public CarService(ICarRepository carRepository)
+        {
+            this.carRepository = carRepository;
+        }
 
         public async Task<ResponseWrapper<bool>> Delete(Guid id)
         {

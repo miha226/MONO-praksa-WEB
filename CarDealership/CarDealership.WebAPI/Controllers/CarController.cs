@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using CarDealership.Model;
-using CarDealership.Service;
+using CarDealership.Service.Common;
 using CarDealership.WebAPI.Models;
 
 namespace CarDealership.WebAPI.Controllers
@@ -15,7 +14,12 @@ namespace CarDealership.WebAPI.Controllers
     
     public class CarController : ApiController
     {
-        public static CarService carService = new CarService();
+        private ICarService carService;
+
+        public CarController(ICarService carService)
+        {
+            this.carService = carService;
+        }
 
         
         public async Task<HttpResponseMessage> Get()
