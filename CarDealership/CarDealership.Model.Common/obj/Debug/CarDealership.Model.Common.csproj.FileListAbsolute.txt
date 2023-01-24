@@ -5,7 +5,6 @@ C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.
 C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Model.Common\obj\Debug\CarDealership.Model.Common.dll
 C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Model.Common\obj\Debug\CarDealership.Model.Common.pdb
 C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Model.Common\bin\Debug\CarDealership.Model.Common.dll.config
-C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Model.Common\bin\Debug\Autofac.dll
 C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Model.Common\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Model.Common\bin\Debug\System.Buffers.dll
 C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Model.Common\bin\Debug\System.Diagnostics.DiagnosticSource.dll
@@ -13,7 +12,6 @@ C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.
 C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Model.Common\bin\Debug\System.Numerics.Vectors.dll
 C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Model.Common\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
 C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Model.Common\bin\Debug\System.Threading.Tasks.Extensions.dll
-C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Model.Common\bin\Debug\Autofac.xml
 C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Model.Common\bin\Debug\Microsoft.Bcl.AsyncInterfaces.xml
 C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Model.Common\bin\Debug\System.Buffers.xml
 C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Model.Common\bin\Debug\System.Diagnostics.DiagnosticSource.xml

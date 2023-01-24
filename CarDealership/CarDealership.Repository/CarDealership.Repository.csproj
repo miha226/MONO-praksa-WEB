@@ -69,6 +69,7 @@
     <Compile Include="AdressRepository.cs" />
     <Compile Include="CarRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RepositoryModule.cs" />
     <Compile Include="ShopRepository.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -69,6 +69,7 @@
     <Compile Include="AdressService.cs" />
     <Compile Include="CarService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceModule.cs" />
     <Compile Include="ShopService.cs" />
   </ItemGroup>
   <ItemGroup>
