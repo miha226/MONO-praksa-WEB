@@ -1,8 +1,10 @@
-﻿using CarDealership.Model;
+﻿using CarDealership.Common;
+using CarDealership.Model;
 using CarDealership.Repository.Common;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace CarDealership.Repository
@@ -11,38 +13,91 @@ namespace CarDealership.Repository
     {
         public static string connectionString = @"Data Source=st-02\SQLEXPRESS;Initial Catalog=CarDealership;Integrated Security=True";
 
-        
-        public async Task<List<Car>> GetAsync()
+
+        public async Task<List<Car>> GetAsync(Sorting sorting, Paging paging, FilterCar filter)
         {
             List<Car> cars = new List<Car>();
             SqlConnection connection = new SqlConnection(connectionString);
-            SqlCommand command = new SqlCommand("Select * from Car", connection);
-            await connection.OpenAsync();
-
-            SqlDataReader reader = await command.ExecuteReaderAsync();
-
-            while (await reader.ReadAsync())
+            StringBuilder stringBuilder = new StringBuilder("Select * from Car");
+            if (sorting.CheckIfPropertyNameExists(new Car()) && sorting.OrderDirectionIsValid())
             {
-                cars.Add(new Car()
+                if (filter.IsNotEmpty())
                 {
-                    Color = reader["Color"].ToString(),
-                    Id = Guid.Parse(reader["CarId"].ToString()),
-                    KilometersTraveled = int.Parse(reader["KilometersTraveled"].ToString()),
-                    Year = DateTime.Parse(reader["YearOfManufacture"].ToString()),
-                    ManufacturerName = reader["ManufacturerName"].ToString(),
-                    Model = reader["Model"].ToString(),
-                    TopSpeed = int.Parse(reader["TopSpeed"].ToString()),
-                    StoredInShop = Guid.Parse(reader["StoredInShop"].ToString())
+                    stringBuilder.Append(" where");
+                    foreach (var property in filter.GetType().GetProperties())
+                    {
+                        if (property.GetValue(filter) != null)
+                        {
+                            string[] words = stringBuilder.ToString().Split(' ');
+                            if (words[words.Length - 1] != "where")
+                            {
+                                stringBuilder.Append(" AND ");
+                            }
+                            if (property.PropertyType != typeof(DateTime?))
+                            {
+                                if (property.Name == "KilometersTraveled")
+                                {
+                                    stringBuilder.AppendFormat(" {0} < '{1}'", property.Name, property.GetValue(filter));
+                                }
+                                else if (property.Name == "TopSpeed")
+                                {
+                                    stringBuilder.AppendFormat(" {0} > '{1}'", property.Name, property.GetValue(filter));
+                                }
+                                else
+                                {
+                                    stringBuilder.AppendFormat(" {0} = '{1}'", property.Name, property.GetValue(filter));
+                                }
+                            }
 
-                });
+                        }
+                    }
+                    if (filter.DateNotEmpty())
+                    {
+                        string[] words = stringBuilder.ToString().Split(' ');
+                        if (words[words.Length - 1] != "where")
+                        {
+                            stringBuilder.Append(" AND ");
+                        }
+                        stringBuilder.Append(" YearOfManufacture between @minDate AND @maxDate ");
+                    }
+                }
 
+
+                stringBuilder.AppendFormat(" order by {0} {1} offset {2} rows fetch next {3} rows only",
+                    sorting.OrderName, sorting.OrderDirection, paging.PageNumber * paging.PageSize, paging.PageSize);
+
+                SqlCommand command = new SqlCommand(stringBuilder.ToString(), connection);
+                if (filter.DateNotEmpty())
+                {
+                    command.Parameters.AddWithValue("@minDate", filter.DateMin);
+                    command.Parameters.AddWithValue("@maxDate", filter.DateMax);
+                }
+                await connection.OpenAsync();
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    cars.Add(new Car()
+                    {
+                        Color = reader["Color"].ToString(),
+                        Id = Guid.Parse(reader["CarId"].ToString()),
+                        KilometersTraveled = int.Parse(reader["KilometersTraveled"].ToString()),
+                        Year = DateTime.Parse(reader["YearOfManufacture"].ToString()),
+                        ManufacturerName = reader["ManufacturerName"].ToString(),
+                        Model = reader["Model"].ToString(),
+                        TopSpeed = int.Parse(reader["TopSpeed"].ToString()),
+                        StoredInShop = Guid.Parse(reader["StoredInShop"].ToString())
+
+                    });
+
+                }
+                reader.Close();
+                connection.Close();
             }
-            reader.Close();
-            connection.Close();
             return cars;
         }
 
-        
+
         public async Task<Car> Get(Guid id)
         {
             Car car = null;
@@ -73,10 +128,10 @@ namespace CarDealership.Repository
             return car;
         }
 
-        
+
         public async Task<ResponseWrapper<bool>> Post(Car car)
         {
-            
+
             SqlConnection connection = new SqlConnection(connectionString);
             SqlCommand command = new SqlCommand("Insert into Car (CarId,ManufacturerName,Model,YearOfManufacture,KilometersTraveled,TopSpeed,Color,StoredInShop) " +
             "values(@id,@manufacturerName, @model, @yearOfManufacture, @kilometersTraveled, @topSpeed" +
@@ -98,7 +153,7 @@ namespace CarDealership.Repository
                 reader.Close();
             }
             catch (Exception ex)
-            {   
+            {
                 return new ResponseWrapper<bool> { Data = false, Message = ex.Message };
                 throw;
             }
@@ -106,6 +161,47 @@ namespace CarDealership.Repository
             connection.Close();
             return new ResponseWrapper<bool> { Data = true, Message = "Car is added in database" };
         }
+
+
+        /*public async Task<ResponseWrapper<bool>> Post(List<Car> cars)
+        {
+
+            SqlConnection connection = new SqlConnection(connectionString);
+            SqlTransaction transaction = connection.BeginTransaction();
+            SqlCommand command;
+            try
+            {
+                var tasks = new List<Task>();
+                foreach (var car in cars)
+                {
+                    command = new SqlCommand("Insert into Car (CarId,ManufacturerName,Model,YearOfManufacture,KilometersTraveled,TopSpeed,Color,StoredInShop) " +
+                "values(@id,@manufacturerName, @model, @yearOfManufacture, @kilometersTraveled, @topSpeed" +
+                ", @color, @storedInshop)", connection);
+
+                    command.Parameters.AddWithValue("@color", car.Color);
+                    command.Parameters.AddWithValue("@storedInshop", car.StoredInShop);
+                    command.Parameters.AddWithValue("@yearOfManufacture", car.Year);
+                    command.Parameters.AddWithValue("@manufacturerName", car.ManufacturerName);
+                    command.Parameters.AddWithValue("@model", car.Model);
+                    command.Parameters.AddWithValue("@topSpeed", car.TopSpeed);
+                    command.Parameters.AddWithValue("@kilometersTraveled", car.KilometersTraveled);
+                    command.Parameters.AddWithValue("@id", car.Id);
+                    tasks.Add(command.ExecuteNonQueryAsync());
+                }
+                Task.WaitAll(tasks.ToArray());
+                transaction.Commit();
+                transaction.Dispose();
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                connection.Close();
+                return new ResponseWrapper<bool> { Data = false, Message = ex.Message };                
+                throw;
+            }
+            
+            return new ResponseWrapper<bool> { Data = true, Message = "Car is added in database" };
+        }*/
 
 
 
@@ -158,7 +254,7 @@ namespace CarDealership.Repository
         }
 
 
-        
+
         public async Task<ResponseWrapper<bool>> Delete(Guid id)
         {
             SqlConnection connection = new SqlConnection(connectionString);
@@ -173,7 +269,7 @@ namespace CarDealership.Repository
                 command.Parameters.AddWithValue("@id", id);
                 try
                 {
-                   await command.ExecuteNonQueryAsync();
+                    await command.ExecuteNonQueryAsync();
                 }
                 catch (Exception ex)
                 {

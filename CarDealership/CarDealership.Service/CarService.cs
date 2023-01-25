@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CarDealership.Service.Common;
 using CarDealership.Model;
 using CarDealership.Repository.Common;
+using CarDealership.Common;
 
 namespace CarDealership.Service
 {
@@ -21,9 +22,10 @@ namespace CarDealership.Service
             return await carRepository.Delete(id);
         }
 
-        public async Task<List<Car>> GetAsync()
+        public async Task<List<Car>> GetAsync(Sorting sorting, Paging paging, FilterCar filter)
         {
-            return await carRepository.GetAsync();
+            paging.PageNumber -= 1;
+            return await carRepository.GetAsync(sorting, paging, filter);
         }
 
         public async Task<Car> Get(Guid id)

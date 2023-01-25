@@ -69,6 +69,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CarDealership.Common\CarDealership.Common.csproj">
+      <Project>{7D9F509C-51EA-4C9E-A943-95C24A0E6ACF}</Project>
+      <Name>CarDealership.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CarDealership.Model\CarDealership.Model.csproj">
       <Project>{08aeb160-dae0-4336-be70-51bcc2cfcbfb}</Project>
       <Name>CarDealership.Model</Name>

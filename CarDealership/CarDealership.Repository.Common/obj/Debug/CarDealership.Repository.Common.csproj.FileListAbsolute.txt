@@ -26,3 +26,6 @@ C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.
 C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Repository.Common\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Repository.Common\bin\Debug\System.Threading.Tasks.Extensions.xml
 C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Repository.Common\bin\Debug\CarDealership.Model.Common.dll.config
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Repository.Common\bin\Debug\CarDealership.Common.dll
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Repository.Common\bin\Debug\CarDealership.Common.pdb
+C:\Users\student\Desktop\webzadatak\MONO-praksa-WEB\CarDealership\CarDealership.Repository.Common\bin\Debug\CarDealership.Common.dll.config

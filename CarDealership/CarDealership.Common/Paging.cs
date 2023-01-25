@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace CarDealership.Common
 {
-    public class Class1
+    public class Paging
     {
+        public int PageSize { get; set; } = 4;
+        public int PageNumber { get; set; } = 1;
     }
 }

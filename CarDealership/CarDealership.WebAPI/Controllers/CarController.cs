@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using CarDealership.Common;
 using CarDealership.Model;
 using CarDealership.Service.Common;
 using CarDealership.WebAPI.Models;
@@ -22,9 +23,9 @@ namespace CarDealership.WebAPI.Controllers
         }
 
         
-        public async Task<HttpResponseMessage> Get()
+        public async Task<HttpResponseMessage> Get([FromUri]Sorting sorting, [FromUri]Paging paging, [FromUri]FilterCar filter)
         {
-            List<Car> cars = await carService.GetAsync();
+            List<Car> cars = await carService.GetAsync(sorting, paging, filter);
             if (cars.Any())
             {
                 List<CarRest> carsRests = new List<CarRest>();
@@ -61,10 +62,7 @@ namespace CarDealership.WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.Created, response.Message);
         }
 
-        
-        
 
-        
         public async Task<HttpResponseMessage> Put(Guid id,CarRest car)
         {
             var response = await carService.Put(id, car.MapToCar());
