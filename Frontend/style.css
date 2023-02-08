@@ -1,0 +1,24 @@
+body {
+    background-color: rgb(230, 242, 255);
+    display: grid;
+    grid-template-columns: 80px 1fr 80px;
+  }
+  .forma{
+    background-color: rgb(217, 217, 217);
+    grid-column: 2;
+    padding: 20px;
+  }
+  .naslov{
+    grid-column: 2;
+    text-align: center;
+  }
+  #listContainer{
+    padding: 20px;
+    grid-column: 2;
+    background-color: rgb(210, 217, 217);
+  }
+  #personsGrid{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    text-align: center;
+  }
